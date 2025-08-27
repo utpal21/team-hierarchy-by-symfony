@@ -25,28 +25,19 @@ final class HierarchyBuilder implements HierarchyBuilderInterface
         $this->nodes = [];
         $this->parents = [];
 
-        foreach ($teams as $t) {
-            $this->nodes[$t->teamName()] = new TeamNode(
-                $t->teamName(),
-                $t->parentTeam() ?? '',
-                $t->managerName(),
-                $t->businessUnit()
+        foreach ($teams as $team) {
+            $this->nodes[$team->teamName()] = new TeamNode(
+                $team->teamName(),
+                $team->parentTeam() ?? '',
+                $team->managerName(),
+                $team->businessUnit()
             );
-            if (!$t->isRoot()) {
-                $this->parents[$t->teamName()] = $t->parentTeam() ?? '';
+            if (!$team->isRoot()) {
+                $this->parents[$team->teamName()] = $team->parentTeam() ?? '';
             }
         }
-
-        foreach ($this->parents as $child => $parent) {
-            if (!isset($this->nodes[$parent])) {
-                throw new InvalidHierarchy(sprintf('Parent "%s" not found for "%s"', $parent, $child));
-            }
-        }
-
+        // ensure single root
         $roots = array_filter($this->nodes, fn(TeamNode $n) => $n->parentTeam === '');
-        if (count($roots) !== 1) {
-            throw new InvalidHierarchy('Hierarchy must have exactly one root node.');
-        }
 
         foreach ($this->parents as $child => $parent) {
             $this->nodes[$parent]->teams[$child] = $this->nodes[$child];

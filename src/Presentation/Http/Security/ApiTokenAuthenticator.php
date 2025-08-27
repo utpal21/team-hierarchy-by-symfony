@@ -21,6 +21,7 @@ final class ApiTokenAuthenticator extends AbstractAuthenticator
      * @param ApiResponder $responder The API responder for generating responses
      */
     public function __construct(
+        // Dependency injection of the expected API token from services.yaml
         private readonly string $expectedToken,
         private readonly ApiResponder $responder,
     ) {}
@@ -33,6 +34,7 @@ final class ApiTokenAuthenticator extends AbstractAuthenticator
      */
     public function supports(Request $request): ?bool
     {
+        // Only support API routes
         return str_starts_with($request->getPathInfo(), '/api');
     }
 
@@ -52,7 +54,7 @@ final class ApiTokenAuthenticator extends AbstractAuthenticator
         if ($providedToken !== $this->expectedToken) {
             throw new AuthenticationException('Invalid API token');
         }
-
+        // An implementation used when there are no credentials to be checked
         return new SelfValidatingPassport(
             new UserBadge('api-user', fn() => new ApiUser())
         );

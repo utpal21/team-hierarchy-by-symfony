@@ -22,7 +22,8 @@ final class HierarchyFilter
         if ($path === []) { throw new TeamNotFound(sprintf('Team "%s" not found', $teamName)); }
 
         // copy chain root→…→target
-        $pruned = $this->cloneWithoutChildren($path[0]); $cursor = $pruned;
+        $pruned = $this->cloneWithoutChildren($path[0]); 
+        $cursor = $pruned;
         for ($i = 1; $i < count($path); $i++) {
             $child = $this->cloneWithoutChildren($path[$i]);
             $cursor->teams[$child->teamName] = $child;

@@ -38,7 +38,9 @@ final class CsvTeamHierarchyRepository implements TeamHierarchyRepositoryInterfa
             }
 
             $assoc = [];
-            foreach ($headers as $i => $h) { $assoc[$h] = $row[$i] ?? null; }
+            foreach ($headers as $i => $h) { 
+                $assoc[$h] = $row[$i] ?? null; 
+            }
 
             $teamName     = trim((string)($assoc['team'] ?? ''));
             $parentTeam   = trim((string)($assoc['parent_team'] ?? ''));
